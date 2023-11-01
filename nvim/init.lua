@@ -111,6 +111,10 @@ vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnos
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
 
+-- RC - LSP defintion splits
+vim.keymap.set('n', '<leader>Da', ':lua vim.lsp.buf.definition()<CR>', { desc = 'LSP: Definition' })
+vim.keymap.set('n', '<leader>Dv', ':vsplit | lua vim.lsp.buf.definition()<CR>', { desc = 'LSP: Definition Vertical' })
+vim.keymap.set('n', '<leader>Ds', ':belowright split | lua vim.lsp.buf.definition()<CR>', { desc = 'LSP: Definition Belowright' })
 require('themeconfig')
 
 -- The line beneath this is called `modeline`. See `:help modeline`
