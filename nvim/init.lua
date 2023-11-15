@@ -44,7 +44,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- [[ PackageManager ]]
-require('packages')
+require('packagemgr')
 -- [[ Vim Options ]]
 require('options')
 -- [[ PackageConfigs ]]
