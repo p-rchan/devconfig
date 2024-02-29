@@ -46,6 +46,17 @@ return {
       'rafamadriz/friendly-snippets',
     },
   },
+  {
+    -- Autocompletion
+    'folke/trouble.nvim',
+    dependencies = {
+      -- Snippet Engine & its associated nvim-cmp source
+      'nvim-tree/nvim-web-devicons',
+    },
+    opts = {
+    }
+  },
+
 
 }
 
