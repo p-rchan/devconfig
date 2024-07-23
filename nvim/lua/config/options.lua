@@ -52,3 +52,6 @@ vim.o.ts = 2
 vim.o.expandtab = true
 vim.o.shiftwidth = 2
 
+-- Folding
+vim.o.foldmethod = 'syntax'
+vim.o.foldlevel = 100

@@ -11,8 +11,12 @@ return {
   {
     -- Theme inspired by Atom
     'folke/tokyonight.nvim',
-    lazy = false,
-    priority = 1000,
+    lazy = false, --load during startup
+    priority = 1000, --load before all other start plugins
+    config = function()
+      -- load the colorscheme
+      vim.cmd([[colorscheme tokyonight]])
+    end
   },
 
 
