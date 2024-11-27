@@ -31,8 +31,8 @@ ShowInstallerIsoInfo() {
 }
 
 alias ls='ls --color=auto'
-alias ll='LC_COLLATE=Cls -lav --ignore=..' # show long listing of all except ".."
-alias l='ls -lav --ignore=.?*'             # show long listing but no hidden dotfiles except "."
+alias ll='LC_COLLATE=C ls -lav --ignore=..' # show long listing of all except ".."
+alias l='ls -lav --ignore=.?*'              # show long listing but no hidden dotfiles except "."
 
 [[ "$(whoami)" = "root" ]] && return
 
