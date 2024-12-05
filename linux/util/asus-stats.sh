@@ -1,16 +1,26 @@
-#!/bin/bash 
+#!/bin/bash
+
+# get all the info
 gpu_type=$(supergfxctl -g)
-power_profile=$(asusctl profile -p | awk '{print $NF}')
-nvidia_first_line=$nvidia_status|head -1 | grep 'failed'
+power_profile=$(asusctl profile -p | grep profile | awk '{print $NF}')
+sensors_out=$(sensors)
+gpu_fan=$(echo "$sensors_out" | grep gpu_fan | awk -F: '{print $2}' | sed s'/ //g')
+cpu_fan=$(echo "$sensors_out" | grep cpu_fan | awk -F: '{print $2}' | sed s'/ //g')
+battery_draw_amps=$(echo "$sensors_out" | grep curr1 | grep -Eo '[0-9\.]{2,}+')
+battery_draw_volts=$(echo "$sensors_out" | grep in0: | grep -Eo '[0-9\.]{2,}+')
+cpu_governor=$(cpupower frequency-info -p | grep governor | awk '{print $3}' | sed 's/"//g')
+# nvidia_first_line=$nvidia_status|head -1 | grep 'failed'
+bat_watts=$(echo "${battery_draw_amps} * ${battery_draw_volts}" | bc)
 
+#output basics
+echo "GPU:$gpu_type, Fan: $gpu_fan"
+echo "PwrProfile: $power_profile, $cpu_governor"
+echo "Battery Draw: ${battery_draw_amps}A, ${battery_draw_volts}V, ${bat_watts}W"
+
+#output nvidia stuff if its on
 case $gpu_type in
-  integrated)
-    echo "GPU:$gpu_type Profile: $power_profile"
-    ;;
-  *)
-    nvidia_status=$(nvidia-smi --format=csv --query-gpu=temperature.gpu,power.draw,memory.used,utilization.gpu,utilization.memory | tail -1 | awk -F, '{print "GPU Temp:",$1,"C Util:",$4," MUtil:",$5}')
-    echo "GPU: $gpu_type | Profile: $power_profile" 
-    echo "$nvidia_status"
-    ;;
+Hybrid)
+  nvidia_status=$(nvidia-smi --format=csv --query-gpu=temperature.gpu,power.draw,memory.used,utilization.gpu,utilization.memory | tail -1 | awk -F, '{print "GPU Temp:",$1,"C Util:",$4," MUtil:",$5}')
+  echo "$nvidia_status"
+  ;;
 esac
-
