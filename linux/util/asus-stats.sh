@@ -6,16 +6,21 @@ power_profile=$(asusctl profile -p | grep profile | awk '{print $NF}')
 sensors_out=$(sensors)
 gpu_fan=$(echo "$sensors_out" | grep gpu_fan | awk -F: '{print $2}' | sed s'/ //g')
 cpu_fan=$(echo "$sensors_out" | grep cpu_fan | awk -F: '{print $2}' | sed s'/ //g')
-battery_draw_amps=$(echo "$sensors_out" | grep curr1 | grep -Eo '[0-9\.]{2,}+')
-battery_draw_volts=$(echo "$sensors_out" | grep in0: | grep -Eo '[0-9\.]{2,}+')
+battery_draw_amps=$(echo "$sensors_out" | grep -A 3 BAT | grep -E '.*A\s+' | awk '{print $2}')
+battery_draw_volts=$(echo "$sensors_out" | grep -A 3 BAT | grep -E '.*V\s+$' | awk '{print $2}')
+battery_draw_watts=$(echo "$sensors_out" | grep -A 3 BAT | grep -E '.*W\s+$' | awk '{print $2}')
 cpu_governor=$(cpupower frequency-info -p | grep governor | awk '{print $3}' | sed 's/"//g')
 # nvidia_first_line=$nvidia_status|head -1 | grep 'failed'
-bat_watts=$(echo "${battery_draw_amps} * ${battery_draw_volts}" | bc)
+if [[ -z "$battery_draw_watts" ]]; then
+  battery_draw_watts=$(echo "${battery_draw_amps} * ${battery_draw_volts}" | bc)
+elif [[ -z "$battery_draw_amps" ]]; then
+  battery_draw_amps=$(echo "${battery_draw_watts} / ${battery_draw_volts}" | bc)
+fi
 
 #output basics
 echo "GPU:$gpu_type, Fan: $gpu_fan"
 echo "PwrProfile: $power_profile, $cpu_governor"
-echo "Battery Draw: ${battery_draw_amps}A, ${battery_draw_volts}V, ${bat_watts}W"
+echo "Battery Draw: ${battery_draw_amps}A, ${battery_draw_volts}V, ${bat_draw_watts}W"
 
 #output nvidia stuff if its on
 case $gpu_type in
