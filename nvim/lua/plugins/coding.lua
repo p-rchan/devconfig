@@ -53,15 +53,26 @@ return {
 		"hrsh7th/nvim-cmp",
 		dependencies = {
 			-- Snippet Engine & its associated nvim-cmp source
-			--"L3MON4D3/LuaSnip",
+			"L3MON4D3/LuaSnip",
 			--"saadparwaiz1/cmp_luasnip",
 
 			-- Adds LSP completion capabilities
 			"hrsh7th/cmp-nvim-lsp",
-
-			-- Adds a number of user-friendly snippets
-			--"rafamadriz/friendly-snippets",
 		},
+		opts = function(_, opts)
+			-- Disable snippets in markdown files
+			if vim.bo.filetype == "markdown" then
+				opts.sources = vim.tbl_filter(function(source)
+					return source.name ~= "luasnip"
+				end, opts.sources)
+			else
+				--Keep the Original Config for everything else
+				opts.sources = {
+					{ name = "nvim_lsp" },
+					{ name = "luasnip" },
+				}
+			end
+		end,
 	},
 	{
 		-- Diagnostic windows
