@@ -8,8 +8,8 @@ return {
 		event = { "BufReadPre", "BufNewFile" },
 		dependencies = {
 			-- Automatically install LSPs to stdpath for neovim
-			"williamboman/mason.nvim",
-			"williamboman/mason-lspconfig.nvim",
+			"mason-org/mason.nvim",
+			"mason-org/mason-lspconfig.nvim",
 
 			-- Useful status updates for LSP
 			-- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
@@ -19,33 +19,40 @@ return {
 			--'folke/neodev.nvim',
 		},
 		config = function()
-			--print("LSPConfig for pylsp is being loaded...")
-			-- Ensure mason
 			require("mason").setup()
-			require("mason-lspconfig").setup()
-			-- configure pylsp
-			-- NOTE - none of this (below) worked.  Switched to using a pycodestyle config which needs to be linked
-			local pylsp_config = {
-				settings = {
-					pylsp = {
-						--configurationSources = { "pycodestyle" },
-						plugins = {
-							pycodestyle = {
-								enabled = false,
-								maxLineLength = 140,
-								ignore = { "E501" },
+			require("mason-lspconfig").setup({
+				ensure_installed = { "pylsp", "lua_ls" },
+			})
+			
+			require("mason-lspconfig").setup_handlers({
+				function(server_name)
+					local settings = {}
+					if server_name == "pylsp" then
+						settings = {
+							pylsp = {
+								plugins = {
+									pycodestyle = { enabled = false, maxLineLength = 140, ignore = { "E501" } },
+									pylint = { enabled = false },
+									flake8 = { enabled = false },
+									mccabe = { enabled = false },
+									pyflakes = { enabled = false },
+								},
 							},
-							pylint = { enabled = false },
-							flake8 = { enabled = false },
-							mccabe = { enabled = false },
-							pyflakes = { enabled = false },
-						},
-					},
-				},
-			}
-			--print(vim.inspect(pylsp_config))
-			require("lspconfig").pylsp.setup(pylsp_config)
-			--print("LSPConfig for pylsp is done loaded...")
+						}
+					elseif server_name == "lua_ls" then
+						settings = {
+							Lua = {
+								workspace = { checkThirdParty = false },
+								telemetry = { enable = false },
+							},
+						}
+					end
+					
+					require("lspconfig")[server_name].setup({
+						settings = settings,
+					})
+				end,
+			})
 		end,
 	},
 	{
