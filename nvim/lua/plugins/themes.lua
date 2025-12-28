@@ -6,10 +6,6 @@ return {
 		opts = {
 			style = "deep",
 		},
-		config = function()
-			--vim.g.onedark_config = { style = "deep" }
-			--vim.cmd([[ colorscheme onedark ]])
-		end,
 	},
 	{
 		-- Theme inspired by Atom
@@ -18,10 +14,6 @@ return {
 		priority = 1000, --load before all other start plugins
 		enabled = true,
 		opts = {},
-		config = function()
-			-- load the colorscheme
-			vim.cmd([[colorscheme tokyonight]])
-		end,
 	},
 	{
 		"nvim-zh/colorful-winsep.nvim",

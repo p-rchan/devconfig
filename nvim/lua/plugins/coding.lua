@@ -8,8 +8,8 @@ return {
 		event = { "BufReadPre", "BufNewFile" },
 		dependencies = {
 			-- Automatically install LSPs to stdpath for neovim
-			"williamboman/mason.nvim",
-			"williamboman/mason-lspconfig.nvim",
+			"mason-org/mason.nvim",
+			"mason-org/mason-lspconfig.nvim",
 
 			-- Useful status updates for LSP
 			-- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
@@ -60,17 +60,13 @@ return {
 			"hrsh7th/cmp-nvim-lsp",
 		},
 		opts = function(_, opts)
+			table.insert(opts.sources, { name = "luasnip" })
+			table.insert(opts.sources, { name = "nvim_lsp" })
 			-- Disable snippets in markdown files
 			if vim.bo.filetype == "markdown" then
 				opts.sources = vim.tbl_filter(function(source)
 					return source.name ~= "luasnip"
 				end, opts.sources)
-			else
-				--Keep the Original Config for everything else
-				opts.sources = {
-					{ name = "nvim_lsp" },
-					{ name = "luasnip" },
-				}
 			end
 		end,
 	},
@@ -83,12 +79,5 @@ return {
 		},
 		opts = {},
 	},
-	{
-		-- Add indentation guides even on blank lines
-		"lukas-reineke/indent-blankline.nvim",
-		-- Enable `lukas-reineke/indent-blankline.nvim`
-		-- See `:help ibl`
-		main = "ibl",
-		opts = {},
-	},
+
 }
