@@ -84,4 +84,11 @@ _open_files_for_editing() {
 # alias pacdiff=eos-pacdiff
 ################################################################################
 
+export PATH=~/.npm-global/bin:$PATH
 EDITOR=/usr/bin/nvim
+
+# Created by `pipx` on 2026-03-06 20:50:06
+export PATH="$PATH:/home/russ/.local/bin"
+
+# uv
+export PATH="/home/russ/.local/bin:$PATH"

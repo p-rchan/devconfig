@@ -2,7 +2,7 @@
 
 # get all the info
 gpu_type=$(supergfxctl -g)
-power_profile=$(asusctl profile -p | grep profile | awk '{print $NF}')
+power_profile=$(asusctl profile get | grep Active | awk -F: '{print $NF}')
 sensors_out=$(sensors)
 gpu_fan=$(echo "$sensors_out" | grep gpu_fan | awk -F: '{print $2}' | sed s'/ //g')
 cpu_fan=$(echo "$sensors_out" | grep cpu_fan | awk -F: '{print $2}' | sed s'/ //g')
