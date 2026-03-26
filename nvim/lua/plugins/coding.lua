@@ -22,36 +22,34 @@ return {
 			require("mason").setup()
 			require("mason-lspconfig").setup({
 				ensure_installed = { "pylsp", "lua_ls" },
-			})
-			
-			require("mason-lspconfig").setup_handlers({
-				function(server_name)
-					local settings = {}
-					if server_name == "pylsp" then
-						settings = {
-							pylsp = {
-								plugins = {
-									pycodestyle = { enabled = false, maxLineLength = 140, ignore = { "E501" } },
-									pylint = { enabled = false },
-									flake8 = { enabled = false },
-									mccabe = { enabled = false },
-									pyflakes = { enabled = false },
+				handlers = {
+					function(server_name)
+						local settings = {}
+						if server_name == "pylsp" then
+							settings = {
+								pylsp = {
+									plugins = {
+										pycodestyle = { enabled = false, maxLineLength = 140, ignore = { "E501" } },
+										pylint = { enabled = false },
+										flake8 = { enabled = false },
+										mccabe = { enabled = false },
+										pyflakes = { enabled = false },
+									},
 								},
-							},
-						}
-					elseif server_name == "lua_ls" then
-						settings = {
-							Lua = {
-								workspace = { checkThirdParty = false },
-								telemetry = { enable = false },
-							},
-						}
-					end
-					
-					require("lspconfig")[server_name].setup({
-						settings = settings,
-					})
-				end,
+							}
+						elseif server_name == "lua_ls" then
+							settings = {
+								Lua = {
+									workspace = { checkThirdParty = false },
+									telemetry = { enable = false },
+								},
+							}
+						end
+						require("lspconfig")[server_name].setup({
+							settings = settings,
+						})
+					end,
+				},
 			})
 		end,
 	},
@@ -97,5 +95,20 @@ return {
 		-- See `:help ibl`
 		main = "ibl",
 		opts = {},
+	},
+	{
+		-- Formatter
+		"stevearc/conform.nvim",
+		opts = {
+			formatters_by_ft = {
+				lua = { "stylua" },
+				python = { "black" },
+				markdown = { "prettierd" },
+			},
+			format_on_save = {
+				timeout_ms = 500,
+				lsp_format = "fallback",
+			},
+		},
 	},
 }
